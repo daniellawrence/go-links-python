@@ -17,7 +17,7 @@ If you visit http://go/git you would be redirect to https://gitlab.com
 However if you visit `http:/go/git go-links`, you would be redirected to search, for "go-links" 
 
 
-TOOD
+TODO
 -----
 
 * Save GoRecords into a database

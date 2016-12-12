@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.0/build/pure-min.css">
+    <style>
+     body {
+	 margin: 50px;
+     }
+     .xlarge {
+	 font-size: 125%;
+     }
+
+     h1 {
+	 text-align: center;
+	 margin: 50px;
+     }
+
+     h1 > small {
+	 display: block;
+	 color: #aaaaaa;
+	 font-size: 75%;
+     }
+
+     form {
+	 max-width: 800px;
+     }
+
+     button {
+	 display: block;
+	 width: 100%;
+	 margin-top: 20px;
+	 
+     }
+     
+    </style>
+   </head>
+   <body>
+       <h1>
+	   Go Links
+	   <small>Short link service for internal use</small>
+       </h1>
+      
+      <form class="pure-form xlarge" action="/golinks/submit" method="POST">
+
+	<label for="name">
+	  Name
+	</label>
+	<input type="text" id="name" placeholder="name"
+	       name="name" class="pure-input-3-12"
+	       {% if edit_record %}
+	       value="{{edit_record.name}}"
+	       {% endif %}
+	>
+
+	<label for="url">
+	  Url
+	</label>
+	<input type="text" id="url" placeholder="url"
+	       name="url" class="pure-input-4-12"
+	       {% if edit_record %}
+	       value="{{edit_record.url}}"
+	       {% endif %}
+	>
+
+	
+	<button type="submit" class="pure-button pure-button-primary">
+	    Create / Update
+	</button>
+
+      </form>
+
+      {% if go_link_database %}
+      <h3>Known Go Links</h3>
+      <ul>
+	  {% for gorecord in go_link_database.values() %}
+	  <a href="/golinks/edit/{{gorecord.name}}/">
+	      <li>{{gorecord.name}} -> {{gorecord.url}}</li>
+	  </a>
+	  {% endfor %}
+      </ul>
+      {% endif %}
+
+  </body>
+</html>

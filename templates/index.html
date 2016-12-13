@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.0/build/pure-min.css">
     <style>
      body {
-	 margin: 50px;
+	 max-width: 900px;
+	 margin: 0 auto;
+
      }
      .xlarge {
 	 font-size: 125%;
@@ -20,10 +22,6 @@
 	 font-size: 75%;
      }
 
-     form {
-	 max-width: 800px;
-     }
-
      .pure-button-primary {
 	 display: block;
 	 width: 100%;
@@ -34,25 +32,45 @@
 	 display: block;
 	 margin-left: 40px;
      }
+
+     #search-form {
+	 margin-bottom: 50px;
+	 
+     }
      
     </style>
    </head>
    <body>
        <h1>
+	   {% if settings.MAIN_IMAGE %}
+	   <img src="{{settings.MAIN_IMAGE}}" />
+	   {% endif %}
 	   {{settings.TITLE}}
 	   <small>{{settings.SUB_TITLE}}</small>
        </h1>
 
-       <form class="pure-form xlarge" action="/golinks/search" method="POST">
+       {% with messages = get_flashed_messages() %}
+       {% if messages %}
+       <ul class="flashes">
+	   {% for message in messages %}
+	   <li>{{ message }}</li>
+	   {% endfor %}
+       </ul>
+       {% endif %}
+       {% endwith %}
+
+       <form id="search-form" class="pure-form xlarge" action="/golinks/search" method="POST">
 
 	   <input type="text" id="search" name="search" class="pure-input-1-1"
 		  placeholder="search for a go-link"
 		  value="{{previous_search_text}}"
 	   />
-	   <button type="submit" class="pure-button">Search</button>
+	   <button type="submit" class="pure-button">
+	       {{settings.SEARCH_TEXT}}
+	   </button>
        </form>
       
-       <form class="pure-form xlarge" action="/golinks/submit" method="POST">
+       <form id="crud-form" class="pure-form xlarge" action="/golinks/submit" method="POST">
 
 	<label for="name">
 	  Name
@@ -76,21 +94,27 @@
 
 	
 	<button type="submit" class="pure-button pure-button-primary">
-	    Create / Update
+	    {{settings.CREATE_UPDATE_TEXT}}
 	</button>
 
       </form>
 
       {% if all_records %}
-      <h3>Known Go Links</h3>
-      <dl class='records'>
-	  {% for record in all_records %}
-	  <a href="/golinks/edit/{{record.name}}/">
-	    <dt>{{record.name}}</dt>
-	    <dd>{{record.url}}</dd>
-	  </a>
-	  {% endfor %}
-      </dl>
+      <div class="found_links">
+	  <h3>Found Links</h3>
+	  <dl class='records'>
+	      {% for record in all_records %}
+	      <a href="/golinks/edit/{{record.name}}/">
+		  <dt>{{record.name}}</dt>
+	      </a>
+	      <dd>{{record.url}}</dd>
+	      <a href="/golinks/delete/{{record.name}}/">
+		  <dd>[delete]</dd>
+	      </a>
+
+	      {% endfor %}
+	  </dl>
+      </div>
       {% endif %}
 
   </body>

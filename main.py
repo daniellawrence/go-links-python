@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re
 
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
 import settings
@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = settings.SECRET_KEY
 db = SQLAlchemy(app)
 
 
@@ -54,6 +55,16 @@ def index():
         'index.html',
         all_records=GoRecord.query.all()
     )
+
+@app.route('/golinks/delete/<name>/')
+def golink_delete(name):
+    record = GoRecord.query.filter_by(name=name).first()
+    db.session.delete(record)
+    db.session.commit()
+
+    flash("Successfully deleted '{.name}'".format(record))
+
+    return redirect(url_for('.index'))
 
 
 @app.route('/<name>')
@@ -112,8 +123,10 @@ def golink_submit():
     record = GoRecord.query.filter_by(name=name).first()
     if record:
         record.url = url
+        flash("Successfully updated '{.name}'".format(record))
     else:
         record = GoRecord(name, url)
+        flash("Successfully created '{.name}'".format(record))
 
     db.session.add(record)
     db.session.commit()

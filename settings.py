@@ -10,3 +10,5 @@ DEMO_RECORDS = [
 
 TITLE = 'Go Links'
 SUB_TITLE = 'Short link service for internal use'
+CREATE_UPDATE_TEXT = 'Create / Update'
+SEARCH_TEXT = 'Search'

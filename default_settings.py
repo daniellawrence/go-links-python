@@ -15,3 +15,4 @@ PORT = 5000
 HOSTNAME = 'localhost'
 
 DEBUG = True
+SECRET_KEY = 'CHANGE_ME'

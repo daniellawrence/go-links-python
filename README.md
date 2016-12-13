@@ -3,6 +3,7 @@ Go-links
 
 Very simple internal short-linking system.
 
+The home for this project is https://gitlab.com/daniellawrence/go-links
 
 Example short link
 

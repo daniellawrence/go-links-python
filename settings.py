@@ -1,4 +1,4 @@
-from default_settings import *
+from default_settings import *  # noqa
 
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
 SQLALCHEMY_TRACK_MODIFICATIONS = False

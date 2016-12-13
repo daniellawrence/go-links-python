@@ -9,7 +9,7 @@ import settings
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS or False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
@@ -47,7 +47,7 @@ class GoRecord(db.Model):
 def render_template_with_settings(template, **kwargs):
     return render_template(template, settings=settings, **kwargs)
 
-    
+
 @app.route('/')
 def index():
     return render_template_with_settings(
@@ -102,7 +102,7 @@ def golink_search(search=None):
         all_records=all_records,
         previous_search_text=search
     )
-    
+
 
 @app.route('/golinks/submit', methods=['POST'])
 def golink_submit():
@@ -124,14 +124,18 @@ def golink_submit():
 if __name__ == '__main__':
     db.create_all()
 
-    for name, url in settings.DEMO_RECORDS:
-        
-        record = GoRecord(name, url)
-        try:
-            db.session.add(record)
-            db.session.commit()
-        except Exception:
-            pass
-    
-    app.debug = True
-    app.run(debug=True)
+
+    if settings.ADD_DEMO_RECORDS:
+        for name, url in settings.DEMO_RECORDS:
+
+            record = GoRecord(name, url)
+            try:
+                db.session.add(record)
+                db.session.commit()
+            except Exception:
+                pass
+
+    app.debug = settings.DEBUG
+    app.port = settings.PORT
+    app.hostname = settings.HOSTNAME
+    app.run()

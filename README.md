@@ -20,7 +20,7 @@ However if you visit `http:/go/git go-links`, you would be redirected to search,
 TODO
 -----
 
-* Save GoRecords into a database
+* -Save GoRecords into a database-
 * Add OAuth2
 ** Show "your" go-links
 * Push lots of things into a `settings.py` file

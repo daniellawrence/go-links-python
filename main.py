@@ -124,7 +124,6 @@ def golink_submit():
 if __name__ == '__main__':
     db.create_all()
 
-
     if settings.ADD_DEMO_RECORDS:
         for name, url in settings.DEMO_RECORDS:
 

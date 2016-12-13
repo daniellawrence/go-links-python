@@ -24,22 +24,35 @@
 	 max-width: 800px;
      }
 
-     button {
+     .pure-button-primary {
 	 display: block;
 	 width: 100%;
 	 margin-top: 20px;
 	 
+     }
+     dd {
+	 display: block;
+	 margin-left: 40px;
      }
      
     </style>
    </head>
    <body>
        <h1>
-	   Go Links
-	   <small>Short link service for internal use</small>
+	   {{settings.TITLE}}
+	   <small>{{settings.SUB_TITLE}}</small>
        </h1>
+
+       <form class="pure-form xlarge" action="/golinks/search" method="POST">
+
+	   <input type="text" id="search" name="search" class="pure-input-1-1"
+		  placeholder="search for a go-link"
+		  value="{{previous_search_text}}"
+	   />
+	   <button type="submit" class="pure-button">Search</button>
+       </form>
       
-      <form class="pure-form xlarge" action="/golinks/submit" method="POST">
+       <form class="pure-form xlarge" action="/golinks/submit" method="POST">
 
 	<label for="name">
 	  Name
@@ -68,15 +81,16 @@
 
       </form>
 
-      {% if go_link_database %}
+      {% if all_records %}
       <h3>Known Go Links</h3>
-      <ul>
-	  {% for gorecord in go_link_database.values() %}
-	  <a href="/golinks/edit/{{gorecord.name}}/">
-	      <li>{{gorecord.name}} -> {{gorecord.url}}</li>
+      <dl class='records'>
+	  {% for record in all_records %}
+	  <a href="/golinks/edit/{{record.name}}/">
+	    <dt>{{record.name}}</dt>
+	    <dd>{{record.url}}</dd>
 	  </a>
 	  {% endfor %}
-      </ul>
+      </dl>
       {% endif %}
 
   </body>

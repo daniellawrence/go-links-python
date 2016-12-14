@@ -68,6 +68,7 @@ def index():
         all_records=GoRecord.query.all()
     )
 
+
 @app.route('/golinks/delete/<name>/')
 def golink_delete(name):
     record = GoRecord.query.filter_by(name=name).first()

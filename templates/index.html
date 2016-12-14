@@ -64,7 +64,7 @@
 	     color: #3c3c3c;
 	     background-color: #e8e8e8;
 	     border: 0;
-	     padding: 20px;
+	     padding: 10px;
 	 }
 	 
 	 button {
@@ -91,13 +91,12 @@
 	</style>
     </head>
     <body>
-	<h1>
-	    {% if settings.MAIN_IMAGE %}
-	    <img src="{{settings.MAIN_IMAGE}}" />
-	    {% endif %}
-	    {{settings.TITLE}}
-	    <small>{{settings.SUB_TITLE}}</small>
-	</h1>
+	<a href="{{ url_for('.index') }}">
+	    <h1>
+		{{settings.TITLE}}
+		<small>{{settings.SUB_TITLE}}</small>
+	    </h1>
+	</a>
 	
 	{% with messages = get_flashed_messages() %}
 	{% if messages %}
@@ -144,26 +143,23 @@
 	</button>
 	
 	{% if edit_record %}
-	<a href="/golinks/delete/{{edit_record.name}}/">
+	<a href="{{ url_for('.golink_delete', name=edit_record.name) }}" >
 	    <button type="button" class="pure-button pure-button-primary button-delete">
 		{{settings.DELETE_TEXT}}
 	    </button>
 	</a>
 	{% endif %}
 	
-	
 	</form>
 
-
-      
       {% if all_records %}
       <div class="found_links">
 	  <h3>Found Links</h3>
 	  <div class="pure-g">
 	      {% for record in all_records %}
 	      <div class="pure-u-1-5">
-		  <a href="/golinks/edit/{{record.name}}/" title="{{record.url}}" class="record" >
-		      <img src="{{record.favicon}}" class="favicon" />
+		  <a href="{{ url_for('.golink_edit', name=record.name) }}" title="{{record.url}}" class="record" >
+		      <img src="{{record.favicon}}" class="favicon" onError="this.onerror = '';this.style.visibility='hidden';" />
 		      <span class="record_header">go/</span>
 		      <span class="record_name">{{record.name}}</span>
 		  </a>

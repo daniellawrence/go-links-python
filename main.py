@@ -4,6 +4,8 @@ import re
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
+from social.apps.flask_app.routes import social_auth
+
 import settings
 
 app = Flask(__name__)
@@ -12,6 +14,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = settings.SECRET_KEY
 db = SQLAlchemy(app)
+
+app.register_blueprint(social_auth)
 
 
 class GoRecord(db.Model):
@@ -86,8 +90,7 @@ def redirect_to_link(name, optional_argument=None):
     record = GoRecord.query.filter_by(name=name).first()
 
     if record is None:
-        golink_search_url = "{}/{}".format(url_for('golink_search'), name)
-        return redirect(golink_search_url)
+        return redirect(url_for('golink_search', search=name))
 
     link = record.link(optional_argument)
     return redirect(link)

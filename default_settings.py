@@ -5,7 +5,7 @@ DEMO_RECORDS = [
     ('mail', 'https://mail.google.com'),
     ('git', 'https://gitlab.com{/search?terms=^}'),
     ('github', 'https://github.com{/search?terms=^}'),
-    ('in', 'https://linkedin.com'),
+    ('in', 'https://www.linkedin.com'),
     ('fb', 'https://www.facebook.com')
 ]
 

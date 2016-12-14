@@ -28,8 +28,20 @@ class GoRecord(db.Model):
     def __repr__(self):
         return "<GoRecord {.name}>".format(self)
 
+    @property
+    def favicon(self):
+        try:
+            domain = self.url_plain.split('/')[2]
+            favicon_path = "http://{0}/favicon.ico".format(domain)
+            return favicon_path
+        except Exception:
+            return ''
+
+    @property
+    def url_plain(self):
+        return re.sub('{.*}', '', self.url)
+
     def link(self, optional=None):
-        url_plain = re.sub('{.*}', '', self.url)
         url_optional = ''
 
         try:
@@ -40,9 +52,9 @@ class GoRecord(db.Model):
 
         if optional:
             optional_args = url_optional.replace('^', optional)
-            return '{}{}'.format(url_plain, optional_args)
+            return '{}{}'.format(self.url_plain, optional_args)
 
-        return url_plain
+        return self.url_plain
 
 
 def render_template_with_settings(template, **kwargs):
@@ -91,15 +103,17 @@ def golink_edit(name):
     )
 
 
-@app.route('/golinks/search', methods=['POST'])
-@app.route('/golinks/search/<search>', methods=['GET'])
-def golink_search(search=None):
+@app.route('/golinks/search/', methods=['POST'])
+def golink_search_redirect_post():
+    search = request.form.get('search')
+    if not search:
+        return redirect(url_for('.index'))
 
-    if search is None:
-        search = request.form.get('search')
-        golink_search_url = "{}/{}".format(url_for('golink_search'), search)
-        return redirect(golink_search_url)
+    return redirect(url_for('golink_search', search=search))
 
+
+@app.route('/golinks/search/<search>/', methods=['GET'])
+def golink_search(search):
     search_like = '%{}%'.format(search)
     search_q = GoRecord.query.filter(or_(
         GoRecord.name.like(search_like),
@@ -115,7 +129,7 @@ def golink_search(search=None):
     )
 
 
-@app.route('/golinks/submit', methods=['POST'])
+@app.route('/golinks/submit/', methods=['POST'])
 def golink_submit():
     name = request.form.get('name')
     url = request.form.get('url')

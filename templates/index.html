@@ -1,89 +1,136 @@
 <html>
-  <head>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.0/build/pure-min.css">
-    <style>
-     body {
-	 max-width: 900px;
-	 margin: 0 auto;
+    <head>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.0/build/pure-min.css">
+	<style>
+	 body {
+	     max-width: 900px;
+	     margin: 0 auto;
+	     color: #2e2e2e;
+	     background-color: #f7f6f4;
+	     font-family: 'PTSansWeb', 'Segoe UI', Arial, sans-serif;
+	     font-size: 13px;
+	     font-weight: normal;
+	 }
 
-     }
-     .xlarge {
-	 font-size: 125%;
-     }
+	 #search {
+	     width: 80%;
+	 }
 
-     h1 {
-	 text-align: center;
-	 margin: 50px;
-     }
+	 #name {
+	     width: 150px;
+	 }
+	 #url {
+	     width: 500px;
+	 }
 
-     h1 > small {
-	 display: block;
-	 color: #aaaaaa;
-	 font-size: 75%;
-     }
+	 .favicon {
+	     height: 32px;
+	     weight: 32px;
+	 }
 
-     .pure-button-primary {
-	 display: block;
-	 width: 100%;
-	 margin-top: 20px;
+	 .record_header {
+	     color: #333333;
+	 }
 	 
-     }
-     dd {
-	 display: block;
-	 margin-left: 40px;
-     }
-
-     #search-form {
-	 margin-bottom: 50px;
+	 a {
+	     color: #7dacd6;
+	     text-decoration: none;
+	 }
 	 
-     }
-     
-    </style>
-   </head>
-   <body>
-       <h1>
-	   {% if settings.MAIN_IMAGE %}
-	   <img src="{{settings.MAIN_IMAGE}}" />
-	   {% endif %}
-	   {{settings.TITLE}}
-	   <small>{{settings.SUB_TITLE}}</small>
-       </h1>
+	 a:hover {
+	     color:#6084a5;
+	     box-shadow:0 2px 0 0 #6084a5;
+	 }
 
-       {% with messages = get_flashed_messages() %}
-       {% if messages %}
-       <ul class="flashes">
-	   {% for message in messages %}
-	   <li>{{ message }}</li>
-	   {% endfor %}
-       </ul>
-       {% endif %}
-       {% endwith %}
+	 .xlarge {
+	     font-size: 125%;
+	 }
+	 
+	 h1 {
+	     text-align: center;
+	     margin: 50px;
+	 }
+	 
+	 h1 > small {
+	     display: block;
+	     color: #aaaaaa;
+	     font-size: 75%;
+	 }
+	 
+	 input {
+	     font-family: 'PTSansWeb','Segoe UI',Arial,sans-serif;
+	     font-size: 20px;
+	     height: 48px;
+	     color: #3c3c3c;
+	     background-color: #e8e8e8;
+	     border: 0;
+	     padding: 20px;
+	 }
+	 
+	 button {
+	     height: 48px;
+	     margin-top: -5px;
+	     padding: 20px;
+	 }
+	 
+	 .button-delete {
+             background: rgb(202, 60, 60);
+	 }
+	 
+	 #search-form {
+	     margin-bottom: 50px;
+	 }
 
-       <form id="search-form" class="pure-form xlarge" action="/golinks/search" method="POST">
+	 .record_name {
+	     font-size: 150%;
+	 }
 
-	   <input type="text" id="search" name="search" class="pure-input-1-1"
-		  placeholder="search for a go-link"
-		  value="{{previous_search_text}}"
-	   />
-	   <button type="submit" class="pure-button">
-	       {{settings.SEARCH_TEXT}}
-	   </button>
-       </form>
-      
-       <form id="crud-form" class="pure-form xlarge" action="/golinks/submit" method="POST">
-
-	<label for="name">
-	  Name
-	</label>
+	 h3 {
+	     font-size: 200%;
+	 }
+	</style>
+    </head>
+    <body>
+	<h1>
+	    {% if settings.MAIN_IMAGE %}
+	    <img src="{{settings.MAIN_IMAGE}}" />
+	    {% endif %}
+	    {{settings.TITLE}}
+	    <small>{{settings.SUB_TITLE}}</small>
+	</h1>
+	
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<ul class="flashes">
+	    {% for message in messages %}
+	    <li>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
+	{% endwith %}
+	
+	<form id="search-form" class="xlarge" action="/golinks/search/" method="POST">
+	    
+	    <input type="text" id="search" name="search" class="pure-input-10-12"
+		   placeholder="search for a go-link"
+		   value="{{previous_search_text}}"
+	    />
+	    <button type="submit" class="pure-button">
+		{{settings.SEARCH_TEXT}}
+	    </button>
+	</form>
+	
+	<form id="crud-form" class="xlarge" action="/golinks/submit/" method="POST">
+	    
 	<input type="text" id="name" placeholder="name"
 	       name="name" class="pure-input-3-12"
 	       {% if edit_record %}
 	       value="{{edit_record.name}}"
 	       {% endif %}
 	>
-
+	
 	<label for="url">
-	  Url
+	    Url
 	</label>
 	<input type="text" id="url" placeholder="url"
 	       name="url" class="pure-input-4-12"
@@ -91,31 +138,40 @@
 	       value="{{edit_record.url}}"
 	       {% endif %}
 	>
-
-	
+		
 	<button type="submit" class="pure-button pure-button-primary">
 	    {{settings.CREATE_UPDATE_TEXT}}
 	</button>
+	
+	{% if edit_record %}
+	<a href="/golinks/delete/{{edit_record.name}}/">
+	    <button type="button" class="pure-button pure-button-primary button-delete">
+		{{settings.DELETE_TEXT}}
+	    </button>
+	</a>
+	{% endif %}
+	
+	
+	</form>
 
-      </form>
 
+      
       {% if all_records %}
       <div class="found_links">
 	  <h3>Found Links</h3>
-	  <dl class='records'>
+	  <div class="pure-g">
 	      {% for record in all_records %}
-	      <a href="/golinks/edit/{{record.name}}/">
-		  <dt>{{record.name}}</dt>
-	      </a>
-	      <dd>{{record.url}}</dd>
-	      <a href="/golinks/delete/{{record.name}}/">
-		  <dd>[delete]</dd>
-	      </a>
-
+	      <div class="pure-u-1-5">
+		  <a href="/golinks/edit/{{record.name}}/" title="{{record.url}}" class="record" >
+		      <img src="{{record.favicon}}" class="favicon" />
+		      <span class="record_header">go/</span>
+		      <span class="record_name">{{record.name}}</span>
+		  </a>
+	      </div>
 	      {% endfor %}
-	  </dl>
+	  </div>
       </div>
       {% endif %}
-
-  </body>
+      
+    </body>
 </html>

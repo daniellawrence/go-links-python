@@ -2,7 +2,6 @@
 """ Go-Links Webapp """
 from flask import Flask, request, render_template, redirect, url_for, flash
 from sqlalchemy.sql import or_
-from social.apps.flask_app.routes import social_auth
 from golinks.models import DB, GoRecord
 
 import settings
@@ -13,8 +12,6 @@ WEBAPP.config['SQLALCHEMY_DB_URI'] = settings.SQLALCHEMY_DB_URI
 WEBAPP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 WEBAPP.secret_key = settings.SECRET_KEY
 DB.init_app(WEBAPP)
-
-WEBAPP.register_blueprint(social_auth)
 
 
 def render_template_with_settings(template, **kwargs):
